@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Music Streaming App Design System - Dark Theme */
+
+@layer base {
+  :root {
+    /* Dark Music App Theme */
+    --background: 220 13% 8%;
+    --foreground: 210 20% 98%;
+
+    --card: 220 12% 12%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 220 12% 10%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 263 70% 65%;
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 220 12% 16%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 220 12% 20%;
+    --muted-foreground: 210 10% 65%;
+
+    --accent: 263 70% 65%;
+    --accent-foreground: 210 20% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 220 12% 20%;
+    --input: 220 12% 16%;
+    --ring: 263 70% 65%;
+
+    --radius: 1rem;
+
+    /* Music App Specific Colors */
+    --music-bg: 220 13% 8%;
+    --music-card: 220 12% 12%;
+    --music-sidebar: 220 15% 6%;
+    --music-player: 220 12% 10%;
+    --music-accent: 263 70% 65%;
+    --music-accent-hover: 263 70% 70%;
+    
+    /* Genre Colors */
+    --genre-pop: 340 75% 65%;
+    --genre-rock: 25 75% 60%;
+    --genre-jazz: 200 70% 60%;
+    --genre-electronic: 280 70% 65%;
+    --genre-hiphop: 120 40% 55%;
+    --genre-classical: 45 70% 65%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--music-accent)) 0%, hsl(var(--music-accent)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--music-card)) 0%, hsl(220 12% 14%) 100%);
+    --gradient-player: linear-gradient(145deg, hsl(var(--music-player)) 0%, hsl(220 12% 12%) 100%);
+
+    /* Shadows */
+    --shadow-card: 0 4px 20px -2px hsl(220 13% 4% / 0.3);
+    --shadow-player: 0 8px 32px -4px hsl(263 70% 65% / 0.2);
+    --shadow-hover: 0 8px 32px -4px hsl(220 13% 4% / 0.4);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Sidebar tokens */
+    --sidebar-background: 220 15% 6%;
+    --sidebar-foreground: 210 20% 90%;
+    --sidebar-primary: 263 70% 65%;
+    --sidebar-primary-foreground: 210 20% 98%;
+    --sidebar-accent: 220 12% 12%;
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 220 12% 20%;
+    --sidebar-ring: 263 70% 65%;
+  }
+
+  .dark {
+    /* Same as root for consistent dark theme */
+    --background: 220 13% 8%;
+    --foreground: 210 20% 98%;
+    --card: 220 12% 12%;
+    --card-foreground: 210 20% 98%;
+    --popover: 220 12% 10%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 263 70% 65%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 12% 16%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 220 12% 20%;
+    --muted-foreground: 210 10% 65%;
+    --accent: 263 70% 65%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 12% 20%;
+    --input: 220 12% 16%;
+    --ring: 263 70% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background: hsl(var(--music-bg));
+    color: hsl(var(--foreground));
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Music App Custom Components */
+  .music-card {
+    @apply bg-card rounded-2xl p-6 shadow-lg backdrop-blur-sm;
+    background: hsl(var(--music-card));
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .music-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-xl border border-white/10;
+    background: hsl(var(--music-card) / 0.8);
+  }
+
+  .genre-card {
+    @apply relative overflow-hidden rounded-xl p-4 text-white font-semibold cursor-pointer;
+    transition: var(--transition-smooth);
+  }
+
+  .genre-card:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .player-controls {
+    @apply flex items-center gap-4 p-4 rounded-2xl;
+    background: var(--gradient-player);
+    box-shadow: var(--shadow-player);
+  }
+
+  .smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Animation utilities */
+  .fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  .scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--music-sidebar));
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--music-accent) / 0.5);
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--music-accent) / 0.7);
+  }
+}

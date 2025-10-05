@@ -1,0 +1,64 @@
+# DigitalOcean App Platform Deployment Configuration
+# This file defines the app structure for DigitalOcean deployment
+
+name: tunecraft
+region: nyc
+
+services:
+  # Backend API Service
+  - name: tunecraft-backend
+    source_dir: /Backend
+    github:
+      repo: SudhanshuYadav174/TuneCraft
+      branch: master
+    run_command: npm start
+    build_command: npm install
+    environment_slug: node-js
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    routes:
+      - path: /api
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8080"
+      - key: CORS_ORIGIN
+        value: ${_self.DOMAIN}
+      - key: YOUTUBE_API_KEY
+        value: YOUR_YOUTUBE_API_KEY_HERE
+        type: SECRET
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "900000"
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: "100"
+
+  # Frontend Static Site
+  - name: tunecraft-frontend
+    source_dir: /FrontEnd
+    github:
+      repo: SudhanshuYadav174/TuneCraft
+      branch: master
+    build_command: npm install && npm run build
+    environment_slug: node-js
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    routes:
+      - path: /
+    envs:
+      - key: VITE_API_URL
+        value: ${tunecraft-backend.PUBLIC_URL}/api
+
+static_sites:
+  - name: tunecraft-app
+    source_dir: /FrontEnd
+    github:
+      repo: SudhanshuYadav174/TuneCraft
+      branch: master
+    build_command: npm install && npm run build
+    output_dir: /dist
+    routes:
+      - path: /
+    envs:
+      - key: VITE_API_URL
+        value: ${tunecraft-backend.PUBLIC_URL}/api

@@ -1,0 +1,23 @@
+services:
+  # Backend API Service
+  - type: web
+    name: tunecraft-backend
+    runtime: node
+    plan: free
+    region: ohio
+    buildCommand: cd Backend && npm install
+    startCommand: cd Backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        value: https://tunecraftstream.me
+      - key: YOUTUBE_API_KEY
+        sync: false # This will be set manually in Render dashboard
+      - key: REDIS_URL
+        sync: false # Optional - for caching
+    healthCheckPath: /api/health
+# For static sites, we'll deploy manually or use a separate approach
+# Render blueprints have limited support for static sites
