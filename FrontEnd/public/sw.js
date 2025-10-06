@@ -94,7 +94,7 @@ function startKeepAlive() {
     if (audioState.isPlaying || audioState.keepAlive || timeSinceLastActivity < 60000) {
       console.log("Service Worker heartbeat: Staying alive for audio playback");
       
-      // Lightweight keep-alive ping
+  // Lightweight keep-alive ping
       fetch('/keep-alive-ping', { 
         method: 'HEAD', 
         cache: 'no-cache',
