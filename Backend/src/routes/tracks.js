@@ -27,23 +27,39 @@ const { asyncHandler } = require('../utils/errorHandler');
  *         name: region
  *         schema:
  *           type: string
- *           default: US
- *         description: Region code for YouTube trending (ISO 3166-1 alpha-2)
+ *           default: IN,US
+ *         description: Region code(s) for YouTube trending (ISO 3166-1 alpha-2). Use comma-separated values for multiple regions (e.g., "IN,US,GB")
  */
 router.get('/trending', asyncHandler(async (req, res) => {
-  const { platform = 'all', limit = 25, region = 'US' } = req.query;
+  const { platform = 'all', limit = 25, region = 'IN,US' } = req.query;
   const parsedLimit = Math.min(parseInt(limit), 50);
 
   let allTracks = [];
 
   try {
     if (platform === 'youtube' || platform === 'all') {
-      try {
-        const youtubeTrending = await youtubeService.getTrendingTracks(parsedLimit, region);
-        allTracks.push(...youtubeTrending);
-      } catch (error) {
-        console.warn('YouTube trending failed:', error.message);
-      }
+      // Split region codes if multiple regions are provided
+      const regions = region.split(',').map(r => r.trim());
+      
+      // Calculate how many results to fetch per region
+      const limitPerRegion = Math.ceil(parsedLimit / regions.length);
+      
+      // Fetch trending from each region
+      const regionPromises = regions.map(async (regionCode) => {
+        try {
+          return await youtubeService.getTrendingTracks(limitPerRegion, regionCode);
+        } catch (error) {
+          console.warn(`YouTube trending failed for region ${regionCode}:`, error.message);
+          return [];
+        }
+      });
+      
+      const regionResults = await Promise.all(regionPromises);
+      
+      // Combine all results
+      regionResults.forEach(tracks => {
+        allTracks.push(...tracks);
+      });
     }
 
     if (platform === 'soundcloud' || platform === 'all') {
@@ -62,8 +78,19 @@ router.get('/trending', asyncHandler(async (req, res) => {
       return bScore - aScore;
     });
 
+    // Remove duplicates based on track ID
+    const uniqueTracks = [];
+    const seenIds = new Set();
+    
+    for (const track of allTracks) {
+      if (!seenIds.has(track.id)) {
+        seenIds.add(track.id);
+        uniqueTracks.push(track);
+      }
+    }
+
     // Limit to requested amount
-    const trendingTracks = allTracks.slice(0, parsedLimit);
+    const trendingTracks = uniqueTracks.slice(0, parsedLimit);
 
     res.json({
       tracks: trendingTracks,

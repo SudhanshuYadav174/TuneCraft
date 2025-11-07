@@ -4,13 +4,14 @@ import {
   Compass, 
   Music, 
   Disc3, 
-  Radio
+  Radio,
+  Mail
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SparklesText } from "@/components/ui/sparkles-text";
 
 const menuItems = [
-  { icon: Home, label: "Explore", active: true },
+  { icon: Home, label: "Explore" },
   { icon: Music, label: "Genres" },
   { icon: Disc3, label: "Albums" },
   { icon: Radio, label: "Radio" },
@@ -90,9 +91,7 @@ export function Sidebar({ className, onMenuItemClick }: SidebarProps) {
                 onClick={() => handleMenuClick(item.label)}
                 className={cn(
                   "flex items-center gap-3 w-full p-2 rounded-lg text-left transition-all duration-300",
-                  item.active 
-                    ? "bg-music-accent text-white" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                 )}
               >
                 <Icon className="w-5 h-5" />
@@ -102,6 +101,26 @@ export function Sidebar({ className, onMenuItemClick }: SidebarProps) {
           })}
         </nav>
       </div>
+
+      {/* Contact Us Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9 }}
+        className="mt-auto"
+      >
+        <motion.button
+          whileHover={{ x: 4 }}
+          onClick={() => window.location.href = 'mailto:sudhanshuyadav174@gmail.com'}
+          className={cn(
+            "flex items-center gap-3 w-full p-2 rounded-lg text-left transition-all duration-300",
+            "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+          )}
+        >
+          <Mail className="w-5 h-5" />
+          <span className="font-medium">Contact Us</span>
+        </motion.button>
+      </motion.div>
     </motion.aside>
   );
 }

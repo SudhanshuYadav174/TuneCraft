@@ -112,7 +112,7 @@ class ApiService {
   async getTrendingTracks(
     platform: 'youtube' | 'soundcloud' | 'all' = 'all',
     limit: number = 25,
-    region: string = 'US'
+    region: string = 'IN,US'
   ): Promise<TrendingResponse> {
     const params = new URLSearchParams({
       platform,
