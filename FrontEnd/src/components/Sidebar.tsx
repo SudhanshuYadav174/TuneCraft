@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SparklesText } from "@/components/ui/sparkles-text";
+import analytics from "@/utils/analytics";
 
 const menuItems = [
   { icon: Home, label: "Explore" },
@@ -24,7 +25,13 @@ interface SidebarProps {
 
 export function Sidebar({ className, onMenuItemClick }: SidebarProps) {
   const handleMenuClick = (label: string) => {
+    analytics.trackMenuClick(label);
     onMenuItemClick?.(label);
+  };
+
+  const handleContactClick = () => {
+    analytics.trackContactClick();
+    window.location.href = 'mailto:sudhanshuyadav174@gmail.com';
   };
   return (
     <motion.aside 
@@ -111,7 +118,7 @@ export function Sidebar({ className, onMenuItemClick }: SidebarProps) {
       >
         <motion.button
           whileHover={{ x: 4 }}
-          onClick={() => window.location.href = 'mailto:sudhanshuyadav174@gmail.com'}
+          onClick={handleContactClick}
           className={cn(
             "flex items-center gap-3 w-full p-2 rounded-lg text-left transition-all duration-300",
             "text-muted-foreground hover:text-foreground hover:bg-secondary/50"

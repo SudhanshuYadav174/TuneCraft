@@ -9,7 +9,19 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    react(),
+    mode === "development" && componentTagger(),
+    {
+      name: 'html-transform',
+      transformIndexHtml(html: string) {
+        return html.replace(
+          '%VITE_GA_MEASUREMENT_ID%',
+          process.env.VITE_GA_MEASUREMENT_ID || ''
+        );
+      },
+    },
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
