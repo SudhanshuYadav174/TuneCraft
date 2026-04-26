@@ -2,6 +2,7 @@ require("dotenv").config({
   path: require("path").join(__dirname, "..", ".env"),
 });
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
 const swaggerUi = require("swagger-ui-express");
@@ -79,23 +80,39 @@ app.use("/api/tracks", tracksRoutes);
 app.use("/api/artists", artistsRoutes);
 app.use("/api", systemRoutes);
 
-// Root endpoint
-app.get("/", (req, res) => {
-  res.json({
-    name: "Wave Flow Backend",
-    version: "1.0.0",
-    description: "Backend service for a public music streaming platform",
-    documentation: "/api/docs",
-    endpoints: {
-      health: "/api/health",
-      search: "/api/search/tracks?q={query}",
-      track: "/api/tracks/{trackId}",
-      stream: "/api/tracks/{trackId}/stream",
-      trending: "/api/tracks/trending",
-      artist: "/api/artists/{artistId}",
-    },
+// Serve frontend in production
+if (process.env.NODE_ENV === "production") {
+  const clientDistPath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "FrontEnd",
+    "dist"
+  );
+
+  app.use(express.static(clientDistPath));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"));
   });
-});
+} else {
+  // Root endpoint for development/testing
+  app.get("/", (req, res) => {
+    res.json({
+      name: "Wave Flow Backend",
+      version: "1.0.0",
+      description: "Backend service for a public music streaming platform",
+      documentation: "/api/docs",
+      endpoints: {
+        health: "/api/health",
+        search: "/api/search/tracks?q={query}",
+        track: "/api/tracks/{trackId}",
+        stream: "/api/tracks/{trackId}/stream",
+        trending: "/api/tracks/trending",
+        artist: "/api/artists/{artistId}",
+      },
+    });
+  });
+}
 
 // Swagger documentation route
 app.use(
